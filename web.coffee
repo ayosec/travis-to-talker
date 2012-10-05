@@ -64,7 +64,7 @@ app.post "/travis", (request, response) ->
 app.post "/start", (request, response) ->
   dataToRoom =
     repository: request.body.repository
-    commit: repository.body.commit
+    commit: request.body.commit
 
   if dataToRoom.repository and dataToRoom.commit
     sendToRoom("TRAVIS START " + JSON.stringify(dataToRoom))
