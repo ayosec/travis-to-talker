@@ -21,6 +21,9 @@ app.post "/travis", (request, response) ->
     branch: payload.branch
     commit: payload.commit
     compare_url: payload.compare_url
+    number: payload.number
+    result: payload.result
+    result_message: payload.result_message
 
   # Check for authorization
   if TravisToken
