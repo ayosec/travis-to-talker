@@ -1,0 +1,12 @@
+{
+  "name": "travis-talker",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "2.5.x",
+    "coffee-script": "1.3.x"
+  },
+  "engines": {
+    "node": "0.6.x",
+    "npm": "1.1.x"
+  }
+}
