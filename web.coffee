@@ -61,6 +61,15 @@ app.post "/travis", (request, response) ->
 
   response.send("Ok")
 
+app.post "/start", (request, response) ->
+  dataToRoom =
+    repository: request.body.repository
+    commit: repository.body.commit
+
+  if dataToRoom.repository and dataToRoom.commit
+    sendToRoom("TRAVIS START " + JSON.stringify(dataToRoom))
+
+  response.send("Ok")
 
 unless TravisToken
   console.log "WARNING: TRAVIS_TOKEN is missing. Requests will be open"
