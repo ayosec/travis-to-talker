@@ -12,6 +12,27 @@ Talker =
   token:   process.env.TALKER_TOKEN
   roomId:  process.env.TALKER_ROOM_ID
 
+sendToRoom = (message) ->
+
+  requestBody = JSON.stringify(message: message)
+  talkerReq = https.request({
+    host: "talkerapp.com"
+    path: "/rooms/#{Talker.roomId}/messages.json"
+    method: "POST"
+    headers: {
+      "X-Talker-Token": Talker.token
+      "Accept": "application/json"
+      "Content-Type": "application/json"
+      "Content-length": requestBody.length
+    }
+  }, (res) ->
+    res.on "data", (data) -> console.log("Data from talker: #{data}")
+  )
+
+  talkerReq.on "error", (error) -> console.log "Error on request to talker: #{error}"
+  talkerReq.end(requestBody)
+  true
+
 app.post "/travis", (request, response) ->
   payload = JSON.parse(request.body.payload)
   dataToRoom =
@@ -36,23 +57,7 @@ app.post "/travis", (request, response) ->
       response.send("Invalid authorization")
       return
 
-  requestBody = JSON.stringify(message: "TRAVIS BUILD " + JSON.stringify(dataToRoom))
-  talkerReq = https.request({
-    host: "talkerapp.com"
-    path: "/rooms/#{Talker.roomId}/messages.json"
-    method: "POST"
-    headers: {
-      "X-Talker-Token": Talker.token
-      "Accept": "application/json"
-      "Content-Type": "application/json"
-      "Content-length": requestBody.length
-    }
-  }, (res) ->
-    res.on "data", (data) -> console.log("Data from talker: #{data}")
-  )
-
-  talkerReq.on "error", (error) -> console.log "Error on request to talker: #{error}"
-  talkerReq.end(requestBody)
+  sendToRoom("TRAVIS BUILD " + JSON.stringify(dataToRoom))
 
   response.send("Ok")
 
